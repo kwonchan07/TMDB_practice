@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>파이썬 영화 검색기</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>🎬 파이썬 영화 검색 서비스</h1>
+        <form action="/" method="get">
+            <input type="text" name="query" placeholder="영화 제목을 입력하세요" value="{{ query }}">
+            <button type="submit">검색</button>
+        </form>
+    </header>
+
+    <main class="container">
+        <!-- 검색 결과 영역 -->
+        <section class="movie-list">
+            <h2>검색 결과</h2>
+            {% if movies %}
+                <div class="grid">
+                    {% for movie in movies %}
+                    <div class="movie-card">
+                        <img src="https://image.tmdb.org/t/p/w200{{ movie.poster_path }}" alt="{{ movie.title }}">
+                        <h3>{{ movie.title }}</h3>
+                        <form action="/add_to_wishlist" method="post">
+                            <input type="hidden" name="id" value="{{ movie.id }}">
+                            <input type="hidden" name="title" value="{{ movie.title }}">
+                            <input type="hidden" name="poster_path" value="{{ movie.poster_path }}">
+                            <button type="submit" class="btn-wish">❤️ 찜하기</button>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>검색 결과가 없습니다.</p>
+            {% endif %}
+        </section>
+
+        <!-- 찜 목록 영역 -->
+        <aside class="wishlist">
+            <h2>나의 찜 목록 ❤️</h2>
+            <ul>
+                {% for item in wishlist %}
+                <li>{{ item.title }}</li>
+                {% else %}
+                <p>찜한 영화가 아직 없습니다.</p>
+                {% endfor %}
+            </ul>
+        </aside>
+    </main>
+</body>
+</html>
